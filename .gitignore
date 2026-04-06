@@ -1,0 +1,39 @@
+# ROS 2标准忽略规则
+build/
+install/
+log/
+devel/
+dist/
+
+# 仿真环境相关
+*.world
+*.sdf
+*.config
+*.gv
+*.pdf
+
+# 二进制和安装包
+*.run
+*.sh
+*.zip
+*.tar.gz
+
+# 文档和设计文件
+*.docx
+*.pdf
+
+# 系统文件
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# IDE配置
+.vscode/
+.idea/
+
+# 特定目录
+dockerfiles/
+exploration_bag/
+Groot2/
+BehaviorTree.CPP/

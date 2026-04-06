@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root BTCPP_format="4" main_tree_to_execute="MainTree">
+                          
+    
+    <!-- ==================== Blackboard 全局参数 ==================== -->
+    <Blackboard>
+        <Entry ID="max_retry" value="3"/>
+        <Entry ID="stay_duration" value="5.0"/>
+        <Entry ID="obstacle_wait_time" value="5.0"/>
+        <Entry ID="detection_range" value="0.5"/>
+    </Blackboard>
+
+    <!-- ==================== 可复用子树：单点巡航 ==================== -->
+    <BehaviorTree ID="PatrolWaypoint">
+        <Sequence name="WaypointPatrol">
+            <!-- 日志：显示当前路点名称 -->
+            <Action ID="LogInfo" message="{wp_name} 巡航中"/>
+            
+            <!-- 使用 goal 字符串格式 "x;y;theta" -->
+            <!-- 直接使用硬编码值，不通过 SetBlackboard -->
+            <RetryUntilSuccessful num_attempts="3">
+                <Sequence>
+                    <Action ID="NavigateToPose" goal="{wp_goal}"/>
+                </Sequence>
+            </RetryUntilSuccessful>
+            
+            <!-- 障碍物检测  -->
+            <Fallback name="ObstacleCheck">
+                <Sequence name="ObstacleDetectedSeq">
+                    <Condition ID="IsObstacleDetected" detection_range="0.5"/>
+                    <Action ID="LogWarn" message="{wp_name} 检测到障碍物，等待中..."/>
+                    <Action ID="Wait" wait_duration="5.0"/>
+                    <Action ID="LogInfo" message="{wp_name} 障碍物等待完成"/>
+                </Sequence>
+                <Action ID="LogInfo" message="{wp_name} 无障碍物"/>
+            </Fallback>
+            
+            <!-- 点位停留 -->
+            <Action ID="LogInfo" message="{wp_name} 停留 5.0 秒"/>
+            <Action ID="Wait" wait_duration="5.0"/>
+            <Action ID="LogInfo" message="{wp_name} 停留完成"/>
+        </Sequence>
+    </BehaviorTree>
+
+    <!-- ==================== 主行为树 ==================== -->
+    <BehaviorTree ID="MainTree">
+        <Sequence name="IndustrialPatrol">
+            
+            <!-- 初始化 -->
+            <Sequence name="Initialization">
+                
+                <Action ID="LogInfo" message="启动三点巡航任务"/>
+                <Action ID="LogInfo" message="参数：最大重试=3, 停留=5.0s"/>
+                
+            </Sequence>
+
+            <!-- 路点 1: (0.0;-1.5;0.0) -->
+            <SubTree ID="PatrolWaypoint" 
+                     wp_name="【路点 1】" 
+                     wp_goal="0.0;-1.5;0.0"/>
+            
+            <!-- 路点 2: (1.0;-1.5;0.0) -->
+            <SubTree ID="PatrolWaypoint" 
+                     wp_name="【路点 2】" 
+                     wp_goal="1.0;-1.5;0.0"/>
+            
+            <!-- 路点 3: (-1.0;1.0;0.0) -->
+            <SubTree ID="PatrolWaypoint" 
+                     wp_name="【路点 3】" 
+                     wp_goal="-1.0;1.0;0.0"/>
+
+            <!-- 任务完成 -->
+            <Sequence name="TaskCompletion">
+                
+                <Action ID="LogInfo" message="所有路点巡航完成！"/>
+                <Action ID="LogInfo" message="任务状态: SUCCESS"/>
+                
+            </Sequence>
+
+        </Sequence>
+    </BehaviorTree>
+
+    <!-- ==================== TreeNodesModel 节点模型 ==================== -->
+    <TreeNodesModel>
+        
+        <!-- 导航动作节点 -->
+        <Action ID="NavigateToPose">
+            <input_port name="goal" type="string">目标坐标，格式："x;y;theta"</input_port>
+            <input_port name="x" type="double">目标 X 坐标（备用）</input_port>
+            <input_port name="y" type="double">目标 Y 坐标（备用）</input_port>
+            <input_port name="theta" type="double">目标朝向（备用）</input_port>
+        </Action>
+        
+        <!-- 等待动作节点 -->
+        <Action ID="Wait">
+            <input_port name="wait_duration" type="double">等待时间 (秒)</input_port>
+        </Action>
+        
+        <!-- 日志动作节点 -->
+        <Action ID="LogInfo">
+            <input_port name="message" type="string">INFO 级别日志消息</input_port>
+        </Action>
+        
+        <Action ID="LogWarn">
+            <input_port name="message" type="string">WARN 级别日志消息</input_port>
+        </Action>
+        
+        <Action ID="LogError">
+            <input_port name="message" type="string">ERROR 级别日志消息</input_port>
+        </Action>
+        
+        <!-- 条件节点 -->
+        <Condition ID="IsObstacleDetected">
+            <input_port name="detection_range" type="double">检测距离 (米)</input_port>
+        </Condition>
+        
+        <Condition ID="IsCancelRequested"/>
+        <Condition ID="IsStuck"/>
+        
+        <!-- SubTree 接口定义 -->
+        <SubTree ID="PatrolWaypoint">
+            <input_port name="wp_name" type="string">路点名称</input_port>
+            <input_port name="wp_goal" type="string">路点坐标 "x;y;theta"</input_port>
+        </SubTree>
+        
+    </TreeNodesModel>
+</root>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+    <!-- Groot 配置文件 -->
+    
+    <!-- 行为树文件路径 -->
+    <BehaviorTree file="nav_waypoints_bt.xml"/>
+    
+    <!-- 节点模型文件 -->
+    <TreeNodesModel file="groot_nodes_model.xml"/>
+    
+    <!-- 监控配置 -->
+    <Monitor>
+        <Topic name="/bt_monitor" type="bt_msgs/BehaviorTreeLog" rate="10"/>
+        <Topic name="/bt_log" type="std_msgs/String" rate="10"/>
+    </Monitor>
+    
+    <!-- 日志配置 -->
+    <Logging>
+        <Level value="INFO"/>
+        <Output console="true" file="true"/>
+    </Logging>
+</root>

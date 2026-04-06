@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>bt_package</name>
+  <version>0.0.0</version>
+  <description>Nav2 behavior tree navigation package with industrial features</description>
+  <maintainer email="your_email@example.com">your_name</maintainer>
+  <license>Apache-2.0</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <buildtool_depend>ament_python</buildtool_depend>
+
+  <depend>rclpy</depend>
+  <depend>nav2_simple_commander</depend>
+  <depend>geometry_msgs</depend>
+  <depend>nav2_behavior_tree</depend>
+  <depend>behaviortree_cpp_v3</depend>
+  <depend>std_msgs</depend>
+  <depend>lifecycle_msgs</depend>
+
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+
+  <export>
+    <build_type>ament_python</build_type>
+  </export>
+</package>

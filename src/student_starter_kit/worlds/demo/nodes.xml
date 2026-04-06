@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<root>
+  <TreeNodesModel>
+    <Action ID="CheckBattery"/>
+    <Action ID="OpenGripper"/>
+    <Action ID="CloseGripper"/>
+    <Action ID="ApproachObject"/>
+  </TreeNodesModel>
+</root>

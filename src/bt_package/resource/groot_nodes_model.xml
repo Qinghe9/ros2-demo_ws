@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+    <!-- Groot 节点模型注册文件 -->
+    <!-- 用于在 Groot 编辑器中识别和配置自定义节点 -->
+    
+    <TreeNodesModel>
+        
+        <!-- ==================== 标准 Nav2 动作节点 ==================== -->
+        
+        <Action ID="NavigateToPose">
+            <input_port name="goal" type="geometry_msgs::msg::PoseStamped">
+                目标位姿 (PoseStamped格式)
+            </input_port>
+            <input_port name="behavior_tree" type="std::string" default="">
+                可选的行为树路径
+            </input_port>
+        </Action>
+        
+        <Action ID="ComputePathToPose">
+            <input_port name="goal" type="geometry_msgs::msg::PoseStamped">
+                目标位姿
+            </input_port>
+            <input_port name="planner_id" type="std::string" default="">
+                规划器ID
+            </input_port>
+            <output_port name="path" type="nav_msgs::msg::Path">
+                规划路径
+            </output_port>
+        </Action>
+        
+        <Action ID="FollowPath">
+            <input_port name="path" type="nav_msgs::msg::Path">
+                要跟随的路径
+            </input_port>
+            <input_port name="controller_id" type="std::string" default="">
+                控制器ID
+            </input_port>
+        </Action>
+        
+        <Action ID="Wait">
+            <input_port name="wait_duration" type="double" default="1.0">
+                等待时间(秒)
+            </input_port>
+        </Action>
+        
+        <Action ID="Spin">
+            <input_port name="spin_dist" type="double" default="1.57">
+                旋转角度(弧度)
+            </input_port>
+        </Action>
+        
+        <Action ID="BackUp">
+            <input_port name="backup_dist" type="double" default="0.15">
+                后退距离(米)
+            </input_port>
+            <input_port name="backup_speed" type="double" default="0.025">
+                后退速度(米/秒)
+            </input_port>
+        </Action>
+        
+        <Action ID="ClearEntireCostmap">
+            <input_port name="service_name" type="std::string" default="local_costmap/clear_entirely_local_costmap">
+                服务名称
+            </input_port>
+        </Action>
+        
+        <Action ID="ClearCostmapAroundRobot">
+            <input_port name="reset_distance" type="double" default="1.0">
+                清除距离(米)
+            </input_port>
+        </Action>
+        
+        <!-- ==================== 工业巡航自定义节点 ==================== -->
+        
+        <Action ID="NavigateToWaypoint">
+            <input_port name="waypoint_id" type="int">
+                路点ID (1, 2, 或 3)
+            </input_port>
+            <input_port name="waypoint_pose" type="geometry_msgs::msg::PoseStamped">
+                路点位姿
+            </input_port>
+        </Action>
+        
+        <Condition ID="IsObstacleDetected">
+            <input_port name="detection_range" type="double" default="0.5">
+                检测距离(米)
+            </input_port>
+        </Condition>
+        
+        <Condition ID="IsCancelRequested">
+            <output_port name="cancel_status" type="bool">
+                取消请求状态
+            </output_port>
+        </Condition>
+        
+        <Action ID="LogInfo">
+            <input_port name="message" type="std::string">
+                INFO级别日志消息
+            </input_port>
+        </Action>
+        
+        <Action ID="LogWarn">
+            <input_port name="message" type="std::string">
+                WARN级别日志消息
+            </input_port>
+        </Action>
+        
+        <Action ID="LogError">
+            <input_port name="message" type="std::string">
+                ERROR级别日志消息
+            </input_port>
+        </Action>
+        
+        <!-- ==================== 控制流节点 ==================== -->
+        
+        <Control ID="PipelineSequence">
+            <input_port name="num_attempts" type="int" default="1">
+                尝试次数
+            </input_port>
+        </Control>
+        
+        <Control ID="RecoveryNode">
+            <input_port name="num_attempts" type="int" default="1">
+                恢复尝试次数
+            </input_port>
+        </Control>
+        
+        <Decorator ID="RateController">
+            <input_port name="hz" type="double" default="10.0">
+                频率(Hz)
+            </input_port>
+        </Decorator>
+        
+        <Decorator ID="GoalUpdater">
+        </Decorator>
+        
+        <Decorator ID="SpeedController">
+            <input_port name="max_speed" type="double" default="0.26">
+                最大速度
+            </input_port>
+        </Decorator>
+        
+        <!-- ==================== 其他 Nav2 节点 ==================== -->
+        
+        <Condition ID="GoalReached">
+            <input_port name="goal" type="geometry_msgs::msg::PoseStamped">
+                目标位姿
+            </input_port>
+        </Condition>
+        
+        <Condition ID="IsStuck">
+        </Condition>
+        
+        <Condition ID="IsPathValid">
+        </Condition>
+        
+        <Action ID="AssistedTeleop">
+            <input_port name="time_allowance" type="double" default="10.0">
+                允许时间(秒)
+            </input_port>
+        </Action>
+        
+        <Action ID="DriveOnHeading">
+            <input_port name="distance" type="double" default="0.5">
+                行驶距离
+            </input_port>
+        </Action>
+        
+    </TreeNodesModel>
+</root>
